@@ -125,7 +125,7 @@ def CheckTheBest(predictors,train, k =6):
 
 # Edit this one as needed to include new models:
 def CrossValStuff(model_number, predictors, train):
-    # Try a model and cross-validate that shit:
+    # Try a model and cross-validate:
     if model_number == 0:
         alg = RandomForestRegressor(random_state = 777)
     elif model_number == 1:
@@ -149,7 +149,7 @@ def CrossValStuff(model_number, predictors, train):
     scores = cross_val_score(alg, train[predictors],train.relevance, cv=3, scoring='mean_squared_error')
     print(scores)
     print( 'Model: %d Score: %f' %(model_number,scores.mean()))  
-    # Note the fucking score sign is flipped.
+    # Note the score sign is flipped.
 
 def SplitCombo(combo_feats,combo):
     train = combo_feats.loc[combo.istrain,:]
@@ -185,7 +185,7 @@ def FixUnits(column):
         new_line = str(line)
         # Replacing units from NUMBER UNIT and NUMBER UNITx:
         # Removed the space between number and unit. Also added the by. If this decreases accuracy, change it back.
-        # Score dropped. Put the space back. The issue may really be with the spellchecker fucking things up.
+        # Score dropped. Put the space back. The issue may really be with the spellchecker messing things up.
         # Or maybe I don't unify all units
         new_line = re.sub('(\s?)([0-9]+)\s?\(?((ft|feet|foot|\')\.?)\)?s?x?(by)?', '\g<1>\g<2> foot \g<5>', new_line )
         new_line = re.sub('(\s?)([0-9]+)\s?\(?([aA]|[aA]mp)\)?s?x?(by)?', '\g<1>\g<2> amp \g<4>', new_line )
@@ -523,7 +523,7 @@ def FindLeftovers(combo,combo_feats):
     print(time.time()-start)
     print('Mission comprete!')
     combo_feats['stem_leftover_frac_td'] = list(map(lambda x,y: np.mean(np.multiply(x,y)), combo['stem_title_leftovers'][:],combo['stem_desc_leftovers'][:])) # Ignores attributes, customers don't see them.
-    # There are some Na's from the null stem searches that came from shit, e.g. "to":
+    # There are some Na's from the null stem searches that came from bad searches, e.g. "to":
     stem_predictors = ['stem_frac_title','stem_frac_desc','stem_frac_attr','stem_leftover_frac_td','num_stem']    
     combo_feats[stem_predictors] = combo_feats[stem_predictors].fillna(0)    
     combo['stem_search_term'] = list(map(lambda x: " ".join(x), combo['stem_search'][:]))
